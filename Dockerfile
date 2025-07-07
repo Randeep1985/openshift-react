@@ -1,10 +1,8 @@
-# Dockerfile
 FROM node:22 AS build
 WORKDIR /app
 COPY . .
 RUN npm install && npm run build
 
-FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+FROM registry.access.redhat.com/ubi8/nginx-120
+COPY --from=build /app/dist/ /opt/app-root/src
+EXPOSE 8080
